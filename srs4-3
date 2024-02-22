@@ -1,0 +1,120 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyNavigatorApp());
+}
+
+class MyNavigatorApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      initialRoute: '/',
+      routes: {
+        '/': (context) => MainScreen(),
+        '/first': (context) => FirstScreen(),
+        '/second': (context) => SecondScreen(),
+        '/third': (context) => ThirdScreen(),
+      },
+    );
+  }
+}
+
+class MainScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Методы навигации')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            NavigationButton(route: '/first', buttonText: 'Push'),
+            NavigationButton(route: '/second', buttonText: 'Pop'),
+            NavigationButton(route: '/third', buttonText: 'Push and Remove Until'),
+            NavigationButton(route: '/first', buttonText: 'Push Named and Remove Until'),
+            NavigationButton(route: '/second', buttonText: 'Push Replacement'),
+            NavigationButton(route: '/third', buttonText: 'Push Replacement Named'),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class NavigationButton extends StatelessWidget {
+  final String route;
+  final String buttonText;
+
+  const NavigationButton({required this.route, required this.buttonText});
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {
+        switch (buttonText) {
+          case 'Push':
+            Navigator.push(context, MaterialPageRoute(builder: (context) => FirstScreen()));
+            break;
+          case 'Pop':
+            Navigator.pop(context);
+            break;
+          case 'Push and Remove Until':
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => ThirdScreen()),
+              ModalRoute.withName('/'),
+            );
+            break;
+          case 'Push Named and Remove Until':
+            Navigator.pushNamedAndRemoveUntil(context, '/first', ModalRoute.withName('/'));
+            break;
+          case 'Push Replacement':
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SecondScreen()));
+            break;
+          case 'Push Replacement Named':
+            Navigator.pushReplacementNamed(context, '/third');
+            break;
+          default:
+            break;
+        }
+      },
+      child: Text(buttonText),
+    );
+  }
+}
+
+class FirstScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Первый экран')),
+      body: Center(
+        child: Text('Первый экран'),
+      ),
+    );
+  }
+}
+
+class SecondScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Второй экран')),
+      body: Center(
+        child: Text('Второй экран'),
+      ),
+    );
+  }
+}
+
+class ThirdScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Третий экран')),
+      body: Center(
+        child: Text('Третий экран'),
+      ),
+    );
+  }
+}
